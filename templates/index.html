@@ -1,17 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World App</title>
+    <title>Local Storage Example</title>
 </head>
 <body>
-    <h1>Noam Or</h1>
-    <p>Welcome to your first Flask app with a custom index page!</p>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-    </nav>
+    <h1>Local Storage Example</h1>
+
+    <!-- Input Fields -->
+    <input id="inputKey" placeholder="Key" />
+    <input id="inputValue" placeholder="Value" />
+    <button onclick="saveToLocalStorage()">Save</button>
+    <button onclick="readFromLocalStorage()">Read</button>
+    <button onclick="clearLocalStorage()">Clear</button>
+    <button onclick="viewAllLocalStorage()">View All</button>
+
+    <!-- Display Section -->
+    <h2>Output</h2>
+    <div id="output"></div>
+
+    <!-- Display All Keys and Values -->
+    <h2>All Keys and Values</h2>
+    <div id="allStorage"></div>
+
+    <script>
+        // Save data to local storage
+        function saveToLocalStorage() {
+            const key = document.getElementById('inputKey').value;
+            const value = document.getElementById('inputValue').value;
+            if (key && value) {
+                localStorage.setItem(key, value);
+                alert('Data saved to local storage!');
+                viewAllLocalStorage(); // Refresh the list
+            } else {
+                alert('Please provide both a key and value!');
+            }
+        }
+
+        // Read data from local storage
+        function readFromLocalStorage() {
+            const key = document.getElementById('inputKey').value;
+            const value = localStorage.getItem(key);
+            document.getElementById('output').innerText = value
+                ? `Value for "${key}": ${value}`
+                : `No value found for key "${key}".`;
+        }
+
+        // Clear local storage
+        function clearLocalStorage() {
+            localStorage.clear();
+            alert('Local storage cleared!');
+            viewAllLocalStorage(); // Refresh the list
+        }
+
+        // View all keys and values in local storage
+        function viewAllLocalStorage() {
+            const allStorageDiv = document.getElementById('allStorage');
+            allStorageDiv.innerHTML = ''; // Clear previous content
+
+            if (localStorage.length === 0) {
+                allStorageDiv.innerText = 'Local storage is empty.';
+                return;
+            }
+
+            const ul = document.createElement('ul');
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                const li = document.createElement('li');
+                li.innerText = `Key: ${key}, Value: ${value}`;
+                ul.appendChild(li);
+            }
+            allStorageDiv.appendChild(ul);
+        }
+
+        // Display all storage items on page load
+        document.addEventListener('DOMContentLoaded', viewAllLocalStorage);
+    </script>
 </body>
 </html>
